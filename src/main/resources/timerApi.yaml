@@ -1,0 +1,66 @@
+openapi: 3.0.3 # version of the specification
+info:
+  version: '1'
+  title: Open API Generator Spring Boot Example
+
+servers:
+  - url: http://localhost:3012
+
+tags:
+  - name: timer
+    description: everything about timer countdown actions
+
+
+paths:
+  /api/timers/outpost:
+    post:
+      summary: post new timer request
+      tags:
+        - timer
+      description: this action post a new timer request
+      operationId: startNewTimerCountdown
+      responses:
+        200:
+          description: posting new timer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimerWebhookResponse'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTimerRequest'
+components:
+  schemas:
+    TimerWebhookResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      description: Response of the parent.
+    WebhookTimerRequest:
+      type: object
+      properties:
+        message:
+          type: string
+      description: an object represents webhook timer post request
+    Error:
+      type: object
+      description: An object that can optionally include information about the error.
+      properties:
+        msg:
+          type: string
+          description: A detailed error message.
+        status_code:
+          type: integer
+          description: The integer representing the HTTP status code (e.g. 500, 404).
+  responses:
+    InternalServerError:
+      description: The requested Timer wasn't found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
